@@ -34,7 +34,7 @@ Before using d3RW, ensure the following prerequisites are met:
       <img src="https://github.com/hangyeol-kang/d3RW/assets/172173003/72e63870-c958-472d-8bc9-8452751b974c" width="50%" height="50%">
 
 4. **Run the Application:**
-    - Run the `d3RW.exe` executable.
+    - Run the d3RW.exe executable on a **director** or **mobile editor**.
     - Click "Allow access" to communicate on the networks.
       
       <img src="https://github.com/hangyeol-kang/d3RW/assets/172173003/8995f65c-3721-4b72-a97e-1063f94d1d3b" width="50%" height="50%">
