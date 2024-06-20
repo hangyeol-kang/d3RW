@@ -1,0 +1,371 @@
+<!--
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
+
+Copyright (c) [2024] [Hangyeol Kang]
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>d3 Remote Web Control Interface</title>
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/popper.min.js') }}" defer></script>
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='css/styles-main.css') }}" rel="stylesheet" />
+
+</head>
+
+<body class="sb-nav-fixed">
+  <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <button class="btn btn-link btn-sm" id="sidebar-toggle" href="#!">
+      <img width="20" height="20" class="img-list" src="static/assets/icons/list.svg" />
+    </button>
+
+    <a class="navbar-brand ps-3" href="" id="target-ip">d3 Remote Web Control Interface</a>
+    <img width="9" height="9" class="img-indicator" src="static/assets/icons/indicator-fill.svg" />
+
+    <div class="slider-container">
+      <button id="btn-engage-transport" class="btn btn-sm btn-dark">Engage
+
+      </button>
+      <div class="slider-container-child">
+        <img width="12" height="12" class="img-brightness" src="static/assets/icons/lightbulb-fill.svg" />
+        <input type="range" id="brightness" min="0" max="1" value="1" step="0.01">
+        <img width="20" height="20" class="img-volume" src="static/assets/icons/volume-up-fill.svg" />
+        <input type="range" id="volume" min="0" max="1" value="1" step="0.01">
+      </div>
+      <div class="dropdown slider-container-child">
+        <button class="btn" type="button" id="notification" data-bs-toggle="dropdown" aria-expanded="false">
+          <img width="15" height="15" class="img-notification" src="static/assets/icons/bell-fill.svg" />
+          <span class="badge rounded-pill badge-notification bg-danger"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" id="dropdown-menu-notifications" aria-labelledby="notification">
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+      <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+        <div class="sb-sidenav-menu">
+          <div class="nav">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <h8>Service</h8>
+              <button class="nav-link active" id="v-pills-project-tab" data-bs-toggle="pill"
+                data-bs-target="#v-pills-project" type="button" role="tab" aria-controls="v-pills-project"
+                aria-selected="true">
+                Project
+              </button>
+              <h8>Session</h8>
+              <button class="nav-link" id="v-pills-mixedreality-tab" data-bs-toggle="pill"
+                data-bs-target="#v-pills-mixedreality" type="button" role="tab" aria-controls="v-pills-mixedreality"
+                aria-selected="false">
+                Mixed Reality
+              </button>
+              <button class="nav-link" id="v-pills-renderstream-tab" data-bs-toggle="pill"
+                data-bs-target="#v-pills-renderstream" type="button" role="tab" aria-controls="v-pills-renderstream"
+                aria-selected="false">
+                RenderStream
+              </button>
+              <button class="nav-link" id="v-pills-colour-tab" data-bs-toggle="pill" data-bs-target="#v-pills-colour"
+                type="button" role="tab" aria-controls="v-pills-colour" aria-selected="v-pills-colour
+                ">
+                Colour
+              </button>
+              <h8>Setting</h8>
+              <button class="nav-link" id="v-pills-network-config-tab" type="button" role="tab"
+                aria-controls="v-pills-settings" aria-selected="false">
+                Network Config
+              </button>
+              <button class="nav-link" id="v-pills-playmode-tab" type="button" role="tab"
+                aria-controls="v-pills-playmode" aria-selected="false">
+                Playmode
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div id="layoutSidenav_content">
+      <main>
+        <div class="tab-content" id="v-pills-tabContent">
+          <div class="tab-pane fade show active" id="v-pills-project" role="tabpanel"
+            aria-labelledby="v-pills-project-tab">
+            <div class="divider">Projects</div>
+            <table id="table-project">
+              <thead>
+                <tr>
+                  <th>Project Path</th>
+                  <th>Version</th>
+                  <th>Last Modified</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+
+            </table>
+
+            <div class="divider">Systems</div>
+
+
+
+            <table id="table-system">
+              <thead>
+                <tr>
+                  <th>Host Name</th>
+                  <th>Type</th>
+                  <th>Running Project</th>
+                  <th>IP Address</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+
+            </table>
+
+            <div class="button-group d-flex justify-content-center" id="button-group-project" role="group">
+              <button id="startlocalproject" class="btn btn-dark">Start</button>
+              <button id="restartlocalproject" class="btn btn-dark">Restart</button>
+              <button id="quitlocalproject" class="btn btn-dark">Quit</button>
+              <button id="quitlocalproject-all" class="btn btn-dark">Quit All</button>
+              <button id="forcequitlocalproject" class="btn btn-dark">Force Quit</button>
+              <button id="forcequitlocalproject-all" class="btn btn-dark">Force Quit All</button>
+              <button id="refresh-projects" class="btn btn-dark">Refresh</button>
+            </div>
+
+
+          </div>
+          <div class="tab-pane fade show" id="v-pills-mixedreality" role="tabpanel"
+            aria-labelledby="v-pills-mixedreality-tab">
+            <table id="table-mrset">
+              <thead>
+                <tr>
+                  <th>MR Set</th>
+                  <th>Current Camera</th>
+                  <th>Overriding Camera</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+
+            </table>
+            <div class="button-group d-flex justify-content-center" id="button-group-mrset" role="group">
+              <button id="captureobservation" class="btn btn-dark btn-mixedreality">Capture</button>
+              <button id="enableobservations" class="btn btn-dark btn-mixedreality">Enable</button>
+              <button id="disableobservations" class="btn btn-dark btn-mixedreality">Disable</button>
+              <button id="deleteobservations" class="btn btn-dark btn-mixedreality">Delete</button>
+              <button id="deleteallobservations" class="btn btn-dark btn-mixedreality">Delete All</button>
+              <button id="selectcamera" class="btn btn-dark btn-mixedreality">Override Camera</button>
+              <button id="refresh-mixedreality" class="btn btn-dark btn-mixedreality">Refresh</button>
+            </div>
+            <div class="divider-calibration">Calibration Name</div>
+
+            <table id="table-observation">
+              <thead>
+                <tr>
+                  <th>Enabled</th>
+                  <th>#</th>
+                  <th>Observation</th>
+                  <th>Zoom</th>
+                  <th>Focus</th>
+                  <th>RMS Error</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+
+
+          </div>
+          <div class="tab-pane fade" id="v-pills-renderstream" role="tabpanel"
+            aria-labelledby="v-pills-renderstream-tab">
+            <div class="divider">Renderstream Layers</div>
+            <table id="table-renderstream">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Asset</th>
+                  <th>Pool</th>
+                  <th>Channel</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody-renderstream">
+              </tbody>
+            </table>
+            <div class="button-group d-flex justify-content-center" id="button-group-renderstream" role="group">
+              <button id="startlayers" class="btn btn-dark">Start</button>
+              <button id="stoplayers" class="btn btn-dark">Stop</button>
+              <button id="restartlayers" class="btn btn btn-dark">Restart</button>
+              <button id="synclayers" class="btn btn btn-dark">Sync</button>
+              <button id="refresh-layers" class="btn btn btn-dark">Refresh</button>
+              <button id="monitoring-mode" class="btn btn btn-dark">Monitoring Mode</button>
+            </div>
+            <div class="row justify-content-center" id="cards-container">
+            </div>
+          </div>
+          <div class="tab-pane fade" id="v-pills-playmode" role="tabpanel" aria-labelledby="v-pills-playmode-tab">
+            <div id="playmodeContent"></div>
+            <div class="tab-pane fade" id="v-pills-settings" role="tabpanel"
+              aria-labelledby="v-pills-network-config-tab">
+            </div>
+          </div>
+
+          <div class="tab-pane fade" id="v-pills-colour" role="tabpanel" aria-labelledby="v-pills-colour-tab">
+            <div class="divider">CDLs</div>
+            <table id="table-cdl">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody-cdl">
+              </tbody>
+            </table>
+            <div class="button-group d-flex justify-content-center" id="button-group-colour" role="group">
+              <button id="refreshCDLs" class="btn btn-dark">Refresh</button>
+            </div>
+            <table id="table-cdl-details">
+
+            </table>
+      </main>
+      <div class="modal fade" id="network-config-modal" tabindex="-1" aria-labelledby="network-config-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="network-config-modal-label">Network Configuration</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="network-config-form" class="needs-validation" novalidate>
+                <div class="mb-3">
+                  <label for="input-ipaddress" class="form-label">IP Address</label>
+                  <input type="text" class="form-control" id="input-ipaddress" placeholder="Enter Target IP Address"
+                    pattern="^\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b$" data-ipaddress="{{host}}" required>
+                  <div class="invalid-feedback">
+                    Please enter a valid IP address.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="input-port" class="form-label">Port</label>
+                  <input type="text" class="form-control" id="input-port" placeholder="Enter Target Port Number"
+                    pattern="^\d{1,5}$" min="0" max="65535" data-port="80" required>
+                  <div class="invalid-feedback">
+                    Please enter a valid port number (0-65535).
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-dark" id="save-network-config">Save changes</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="playmode-modal" tabindex="-1" aria-labelledby="playmode-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="playmode-modal-label">Playmode
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <button type="button" id="play" class="btn btn-lg btn-block btn-dark">
+                <img width="32" height="32" src="static/assets/icons/play-fill.svg" />
+              </button>
+              <button type="button" id="playsection" class="btn btn-lg btn-block btn-dark">
+                <img width="32" height="32" src="static/assets/icons/Play-to-end-of-section.svg" />
+              </button>
+              <button type="button" id="playloopsection" class="btn btn-lg btn-block btn-dark">
+                <img width="32" height="32" src="static/assets/icons/return-to-start-of-track.svg" />
+              </button>
+              <button type="button" id="stop" class="btn btn-lg btn-block btn-dark">
+                <img width="32" height="32" src="static/assets/icons/stop-fill.svg" />
+              </button>
+              <button type="button" id="gotoprevsection" class="btn btn-lg btn-block btn-dark">
+                <img width="32" height="32" src="static/assets/icons/previous-section.svg" />
+              </button>
+              <button type="button" id="gotonextsection" class="btn btn-lg btn-block btn-dark">
+                <img width="32" height="32" src="static/assets/icons/next-section.svg" />
+              </button>
+              <button type="button" id="returntostart" class="btn btn-lg btn-block btn-dark">
+                <img width="32" height="32" src="static/assets/icons/arrow-counterclockwise.svg" />
+              </button>
+              <button type="button" id="gotoprevtrack" class="btn btn-lg btn-block btn-dark">
+                <img width="32" height="32" src="static/assets/icons/caret-up-fill.svg" />
+              </button>
+              <button type="button" id="gotonexttrack" class="btn btn-lg btn-block btn-dark">
+                <img width="32" height="32" src="static/assets/icons/caret-down-fill.svg" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid fixed-bottom transport">
+        <img width="46" height="46" id="img-d3RW" src="static/assets/icons/d3RW-black.svg" />
+        <div class="btn-group" id="transport-button-group" role="group">
+          <div class="dropup-center dropup slider-container-child">
+            <button class="btn btn-dark" type="button" id="cue-list" data-bs-toggle="dropdown" aria-expanded="false">
+              <img width="32" height="32" class="img-card-list" src="static/assets/icons/card-list.svg" />
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" id="dropdown-menu-cuelist" aria-labelledby="cueListLink">
+          </div>
+          <button type="button" id="play" class="btn btn-dark">
+            <img width="32" height="32" src="static/assets/icons/play-fill.svg" />
+          </button>
+          <button type="button" id="playsection" class="btn btn-dark">
+            <img width="32" height="32" src="static/assets/icons/Play-to-end-of-section.svg" />
+          </button>
+          <button type="button" id="playloopsection" class="btn btn-dark">
+            <img width="32" height="32" src="static/assets/icons/return-to-start-of-track.svg" />
+          </button>
+          <button type="button" id="stop" class="btn btn-dark">
+            <img width="32" height="32" src="static/assets/icons/stop-fill.svg" />
+          </button>
+          <button type="button" id="gotoprevsection" class="btn btn-dark">
+            <img width="32" height="32" src="static/assets/icons/previous-section.svg" />
+          </button>
+          <button type="button" id="gotonextsection" class="btn btn-dark">
+            <img width="32" height="32" src="static/assets/icons/next-section.svg" />
+          </button>
+          <button type="button" id="returntostart" class="btn btn-dark">
+            <img width="24" height="24" src="static/assets/icons/arrow-counterclockwise.svg" />
+          </button>
+          <button type="button" id="gotoprevtrack" class="btn btn-dark">
+            <img width="32" height="32" src="static/assets/icons/caret-up-fill.svg" />
+          </button>
+          <button type="button" id="gotonexttrack" class="btn btn-dark">
+            <img width="32" height="32" src="static/assets/icons/caret-down-fill.svg" />
+          </button>
+        </div>
+      </div>
+
+    </div>
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/disguise-api-transport.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/disguise-api-project.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/disguise-api-mixedreality.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/disguise-api-renderstream.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/disguise-api-colour.js') }}"></script>
+
+
+</body>
+
+</html>
